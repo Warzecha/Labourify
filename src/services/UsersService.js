@@ -2,12 +2,9 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const {ErrorHandler} = require("../helpers/error");
 const bcrypt = require('bcrypt');
-const TokenGenerator = require('../helpers/TokenGenerator');
+const {sign} = require('../helpers/auth');
 
 const saltRounds = 10;
-
-
-const tokenGenerator = new TokenGenerator();
 
 exports.register = async (registrationRequest) => {
 
@@ -19,24 +16,24 @@ exports.register = async (registrationRequest) => {
     } = registrationRequest;
 
     if (!password) {
-        throw new ErrorHandler(400, 'Password is required')
+        throw new ErrorHandler(400, 'Password is required');
     }
 
     if (!email) {
-        throw new ErrorHandler(400, 'Email is required')
+        throw new ErrorHandler(400, 'Email is required');
     }
 
     if (!username) {
-        throw new ErrorHandler(400, 'Username is required')
+        throw new ErrorHandler(400, 'Username is required');
     }
 
     if (password !== passwordConfirmation) {
-        throw new ErrorHandler(400, 'Passwords do not match')
+        throw new ErrorHandler(400, 'Passwords do not match');
     }
 
     const user = await User.findOne({where: {email}}).exec();
     if (user) {
-        throw new ErrorHandler(400, 'User with the specified email already exists')
+        throw new ErrorHandler(400, 'User with the specified email already exists');
     }
 
     bcrypt.hash(password, saltRounds).then((passwordHash) => {
@@ -45,10 +42,10 @@ exports.register = async (registrationRequest) => {
             username,
             email,
             passwordHash,
-        })
+        });
     });
 
-    return {username, email}
+    return {username, email};
 };
 
 exports.login = async (loginRequest) => {
@@ -59,17 +56,17 @@ exports.login = async (loginRequest) => {
     } = loginRequest;
 
     if (!password) {
-        throw new ErrorHandler(400, 'Password is required')
+        throw new ErrorHandler(400, 'Password is required');
     }
 
     if (!email) {
-        throw new ErrorHandler(400, 'Email is required')
+        throw new ErrorHandler(400, 'Email is required');
     }
 
     const user = await User.findOne({email}).exec();
 
     if (!user) {
-        throw new ErrorHandler(403, 'Email and password does not match')
+        throw new ErrorHandler(403, 'Wrong login credentials');
     }
 
     const match = await bcrypt.compare(password, user.passwordHash);
@@ -80,10 +77,57 @@ exports.login = async (loginRequest) => {
             sub: user.id
         };
 
-        let token = tokenGenerator.sign(tokenPayload);
+        let token = sign(tokenPayload);
         return {accessToken: token};
     } else {
-        throw new ErrorHandler(403, 'Email and password does not match')
+        throw new ErrorHandler(403, 'Wrong login credentials');
     }
 
 };
+
+exports.getById = async (id) => {
+    const user = await User.findById(id).exec();
+
+    if (user == null) {
+        throw new ErrorHandler(404, 'User not found');
+    }
+
+    return formatUserDetails(user);
+};
+
+exports.listAll = async () => {
+    return (await User.find().exec())
+        .map(formatUserDetails);
+};
+
+exports.getAllByGithubUsername = async (username) => {
+    const userList = await User.find(
+        {
+            githubAccount: {username}
+        }).exec();
+
+    return userList.map(formatUserDetails);
+};
+
+exports.update = async (id, user) => {
+
+    const updated = await User.findByIdAndUpdate(id, user).exec();
+
+    return formatUserDetails(updated);
+};
+
+const formatUserDetails = user => {
+    const {
+        username, email, githubAccount, slackAccount, image
+    } = user;
+
+    return {
+        id: user._id,
+        username,
+        email,
+        githubAccount,
+        slackAccount,
+        image
+    };
+};
+

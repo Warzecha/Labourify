@@ -1,17 +1,18 @@
 const mongoose = require('mongoose');
 
-const { Schema } = mongoose;
+const {Schema} = mongoose;
 
 const schema = new Schema({
-    username: {
-        type: String
+    username: String,
+    email: String,
+    passwordHash: String,
+    image: String,
+    githubAccount: {
+        username: String
     },
-    email: {
-        type: String
-    },
-    passwordHash: {
-        type: String
-    },
+    slackAccount: {
+        username: String
+    }
 });
 
 mongoose.model('User', schema);
