@@ -21,8 +21,6 @@ router.post('/github', async (req, res, next) => {
     res.json({
         status: 'pending'
     });
-    ;
-
 
 });
 

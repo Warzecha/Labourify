@@ -1,5 +1,6 @@
 const express = require('express');
 const UsersService = require("../services/UsersService");
+const AchievementProgressService = require('../services/AchievementProgressService');
 const {verifyTokenMiddleware, getSubjectFromRequest} = require("../helpers/auth");
 const {handleError} = require("../helpers/error");
 const router = express.Router();
@@ -45,7 +46,7 @@ router.get('/', async (req, res, next) => {
 
 router.put('/:userId', verifyTokenMiddleware, async (req, res, next) => {
     try {
-        let userId = req.params.userId;
+        let {userId} = req.params;
 
         if (userId === 'me') {
             userId = getSubjectFromRequest(req);
@@ -59,16 +60,16 @@ router.put('/:userId', verifyTokenMiddleware, async (req, res, next) => {
     }
 });
 
-router.put('/:userId/achievements', verifyTokenMiddleware, async (req, res, next) => {
+router.get('/:userId/achievements', verifyTokenMiddleware, async (req, res, next) => {
     try {
-        let userId = req.params.userId;
+        let {userId} = req.params;
 
         if (userId === 'me') {
             userId = getSubjectFromRequest(req);
         }
 
-        let response = await UsersService.update(userId, req.body);
-        res.json(response);
+        let achievementList = await AchievementProgressService.listAll(userId);
+        res.json(achievementList);
     } catch (e) {
         console.error(e.message);
         next(e);

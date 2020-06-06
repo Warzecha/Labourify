@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const {ErrorHandler} = require("../helpers/error");
 const bcrypt = require('bcrypt');
+const AchievementProgressService = require('./AchievementProgressService');
 const {sign} = require('../helpers/auth');
 
 const saltRounds = 10;
@@ -111,10 +112,33 @@ exports.getAllByGithubUsername = async (username) => {
 
 exports.update = async (id, user) => {
 
+
     const updated = await User.findByIdAndUpdate(id, user).exec();
+
+    const {
+        githubAccount,
+        slackAccount,
+        image
+    } = updated;
+
+    if (githubAccount && githubAccount.username) {
+        await AchievementProgressService.updateProgress(id, 'github-integration', {increaseScore: 1});
+    }
+
+    if (slackAccount && slackAccount.username) {
+        await AchievementProgressService.updateProgress(id, 'slack-integration', {increaseScore: 1});
+    }
+
+    const prev = await User.findById(id).exec();
+
+    if (prev.image !== image) {
+        await AchievementProgressService.updateProgress(id, 'photogenic', {increaseScore: 1});
+    }
+
 
     return formatUserDetails(updated);
 };
+
 
 const formatUserDetails = user => {
     const {

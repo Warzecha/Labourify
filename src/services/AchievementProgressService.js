@@ -42,13 +42,8 @@ exports.updateProgress = async (userId, achievementId, {increaseScore}) => {
 
 };
 
-exports.listAll = async ({userId}) => {
+exports.listAll = async (userId = null) => {
     if (userId) {
-
-        if (userId === 'me') {
-
-        }
-
         const achievementProgressList = await AchievementProgress.find({userId}).exec();
 
 
