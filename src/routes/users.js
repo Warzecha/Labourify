@@ -1,8 +1,8 @@
 const express = require('express');
-const UsersService = require("../services/UsersService");
+const UsersService = require('../services/UsersService');
 const AchievementProgressService = require('../services/AchievementProgressService');
-const {verifyTokenMiddleware, getSubjectFromRequest} = require("../helpers/auth");
-const {handleError} = require("../helpers/error");
+const {verifyTokenMiddleware, getSubjectFromRequest} = require('../helpers/auth');
+const {handleError} = require('../helpers/error');
 const router = express.Router();
 
 router.get('/me', verifyTokenMiddleware, async (req, res, next) => {
