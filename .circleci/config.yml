@@ -44,10 +44,10 @@ jobs:
     machine: true
     steps:
       # Install `gcloud` and `kubectl` if not already installed.
-      - gcr/gcr-auth
       - gcp-gke/install
       - gcp-gke/update-kubeconfig-with-credentials:
           cluster: labourify-cluster
+          perform-login: true
       # Initialize the `gcloud` CLI.
       #      - gcp-gke/init
       # Update a deployment Docker image.
