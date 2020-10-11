@@ -46,8 +46,9 @@ jobs:
 #      - gcp-gke/init
       # Update a deployment Docker image.
       - gcp-gke/rollout-image:
-          deployment: labourify-cluster
+          cluster: labourify-cluster
           container: labourify-backend
+          deployment: labourify-backend
           image: gcr.io/labourify/app:v2 # change version when updating
 workflows:
   build_update_deploy:
