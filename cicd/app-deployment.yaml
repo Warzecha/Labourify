@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: labourify-backend
+  labels:
+    app: backend
+spec:
+  selector:
+    matchLabels:
+      app: ci-deploy
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ci-deploy
+        tier: backend
+    spec:
+      containers:
+        - image: gcr.io/labourify/app:v1
+          name: labourify-backend
+          ports:
+            - containerPort: 8080
+              name: ci-deploy

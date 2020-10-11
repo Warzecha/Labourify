@@ -36,7 +36,9 @@ app.use('/achievements', achievementsRouter);
 
 
 const connectToDatabase = () => {
-    return mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTopology: true});
+    const {DATABASE_URL} = process.env;
+    console.log('Connect to DB', DATABASE_URL);
+    return mongoose.connect(DATABASE_URL, {useNewUrlParser: true, useUnifiedTopology: true});
 };
 
 const listen = () => {
