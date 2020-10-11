@@ -45,6 +45,7 @@ jobs:
     steps:
       # Install `gcloud` and `kubectl` if not already installed.
       - gcp-gke/install
+      - gcp-gke/update-kubeconfig-with-credentials
       # Initialize the `gcloud` CLI.
       #      - gcp-gke/init
       # Update a deployment Docker image.
