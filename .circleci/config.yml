@@ -44,6 +44,7 @@ jobs:
     machine: true
     steps:
       # Install `gcloud` and `kubectl` if not already installed.
+      - gcr/gcr-auth
       - gcp-gke/install
       - gcp-gke/update-kubeconfig-with-credentials:
           cluster: labourify-cluster
