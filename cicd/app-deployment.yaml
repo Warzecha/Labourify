@@ -20,6 +20,19 @@ spec:
       containers:
         - image: gcr.io/labourify/app:v1
           name: labourify-backend
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-config
+                  key: database-url
+            - name: JWT_EXPIRES_IN
+              value: "1d"
+            - name: JWT_EXPIRES_IN
+              secretKeyRef:
+                name: security-secret
+                key: jwt-secret
+
           ports:
             - containerPort: 8080
               name: ci-deploy
