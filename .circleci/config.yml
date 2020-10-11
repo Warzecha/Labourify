@@ -56,6 +56,7 @@ jobs:
           container: labourify-backend
           deployment: labourify-backend
           image: gcr.io/labourify/app # change version when updating
+          tag: "v2"
 workflows:
   build_update_deploy:
     jobs:
