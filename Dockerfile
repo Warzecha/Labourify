@@ -10,7 +10,6 @@ COPY package.json package.json
 COPY package-lock.json package-lock.json
 COPY src ./src
 COPY public ./public
-COPY .env ./public
 
 RUN npm install
 # If you are building your code for production
