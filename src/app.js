@@ -5,15 +5,18 @@ const logger = require('morgan');
 const cors = require('cors');
 
 const mongoose = require('mongoose');
+require('./models/OrganizationPermission');
+require('./models/Organization');
 require('./models/User');
 require('./models/Integration');
 require('./models/AchievementProgress');
 
-const indexRouter = require('./routes');
-const usersRouter = require('./routes/users');
-const authRouter = require('./routes/auth');
-const webhookRouter = require('./routes/webhook');
-const achievementsRouter = require('./routes/achievements');
+const IndexController = require('./controllers/IndexController');
+const UsersController = require('./controllers/UserController');
+const AuthController = require('./controllers/AuthController');
+const WebhookController = require('./controllers/WebhookController');
+const AchievementController = require('./controllers/AchievementController');
+const OrganizationController = require('./controllers/OrganizationController');
 
 const PORT = 8080;
 
@@ -28,11 +31,12 @@ app.use(cors());
 
 app.use('/static', express.static('public'));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/auth', authRouter);
-app.use('/webhook', webhookRouter);
-app.use('/achievements', achievementsRouter);
+app.use('/', IndexController);
+app.use('/users', UsersController);
+app.use('/auth', AuthController);
+app.use('/webhook', WebhookController);
+app.use('/achievements', AchievementController);
+app.use('/organizations', OrganizationController);
 
 
 const connectToDatabase = () => {

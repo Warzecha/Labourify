@@ -1,5 +1,5 @@
 const AchievementProgressService = require('../services/AchievementProgressService');
-const UsersService = require('../services/UsersService');
+const UsersService = require('../services/UserService');
 
 
 const handleEvent = async (event, payload) => {

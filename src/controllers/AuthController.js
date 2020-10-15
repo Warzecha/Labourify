@@ -1,17 +1,17 @@
 const express = require('express');
-const {handleError} = require("../helpers/error");
+const {handleError} = require('../helpers/error');
 const router = express.Router();
-const {register, login} = require('../services/UsersService');
+const {register, login} = require('../services/UserService');
 
 /* GET users listing. */
 router.post('/register', async (req, res, next) => {
 
     try {
         let response = await register(req.body);
-        res.status(201).json(response)
+        res.status(201).json(response);
     } catch (e) {
         console.error(e.message);
-        next(e)
+        next(e);
     }
 
 });
@@ -19,10 +19,10 @@ router.post('/register', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
     try {
         let response = await login(req.body);
-        res.json(response)
+        res.json(response);
     } catch (e) {
         console.error(e.message);
-        next(e)
+        next(e);
     }
 });
 

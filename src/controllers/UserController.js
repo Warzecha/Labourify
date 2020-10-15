@@ -1,5 +1,5 @@
 const express = require('express');
-const UsersService = require('../services/UsersService');
+const UsersService = require('../services/UserService');
 const AchievementProgressService = require('../services/AchievementProgressService');
 const {verifyTokenMiddleware, getSubjectFromRequest} = require('../helpers/auth');
 const {handleError} = require('../helpers/error');
