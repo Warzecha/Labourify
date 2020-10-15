@@ -17,10 +17,10 @@ router.post('/', verifyTokenMiddleware, async (req, res, next) => {
     }
 });
 
-router.get('/:organizationId', async (req, res, next) => {
+router.get('/:orgSlug', async (req, res, next) => {
     try {
-        const {organizationId} = req.params;
-        const response = await OrganizationService.getById(organizationId);
+        const {orgSlug} = req.params;
+        const response = await OrganizationService.getByUrlSlug(orgSlug);
         res.json(response);
     } catch (e) {
         console.error(e.message);

@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
-const {HandledHttpError} = require("../helpers/error");
+const {HandledHttpError} = require('../helpers/error');
 const bcrypt = require('bcrypt');
 const AchievementProgressService = require('./AchievementProgressService');
 const {sign} = require('../helpers/auth');
 
 const saltRounds = 10;
 
-exports.register = async (registrationRequest) => {
+const register = async (registrationRequest) => {
 
     const {
         email,
@@ -49,7 +49,7 @@ exports.register = async (registrationRequest) => {
     return {username, email};
 };
 
-exports.login = async (loginRequest) => {
+const login = async (loginRequest) => {
 
     const {
         email,
@@ -86,7 +86,7 @@ exports.login = async (loginRequest) => {
 
 };
 
-exports.getById = async (id) => {
+const getById = async (id) => {
     const user = await User.findById(id)
         .populate({
             path: 'orgPermissions',
@@ -104,18 +104,18 @@ exports.getById = async (id) => {
     return user;
 };
 
-exports.listAll = async () => {
+const listAll = async () => {
     return await User.find().exec();
 };
 
-exports.getAllByGithubUsername = async (username) => {
+const getAllByGithubUsername = async (username) => {
     return await User.find(
         {
             githubAccount: {username}
         }).exec();
 };
 
-exports.update = async (id, user) => {
+const update = async (id, user) => {
 
 
     const updated = await User.findByIdAndUpdate(id, user).exec();
@@ -142,6 +142,15 @@ exports.update = async (id, user) => {
 
 
     return updated;
+};
+
+module.exports = {
+    register,
+    login,
+    getById,
+    listAll,
+    getAllByGithubUsername,
+    update,
 };
 
 

@@ -14,10 +14,14 @@ const createOrganization = async (createOrganizationRequest, creatorId) => {
     const creatorObjectId = mongoose.Types.ObjectId(creatorId);
 
     try {
-
+        const {name} = createOrganizationRequest;
+        const urlSlug = name
+            .replace(/[^0-9a-zA-Z-]+/, '')
+            .replace(/\s+/, '-');
 
         const organization = new Organization({
             ...createOrganizationRequest,
+            urlSlug: urlSlug,
             users: [creatorObjectId]
         });
 
@@ -56,16 +60,35 @@ const listAll = async (query) => {
 const getById = async (id) => {
     try {
         return await Organization.findById(id)
-            .populate({path: 'users'})
+            // .populate({path: 'users'})
             .exec();
     } catch (e) {
         handleMongooseValidationError(e);
     }
 };
 
+const getByUrlSlug = async (orgSlug) => {
+    try {
+        const org = await Organization.findOne({urlSlug: orgSlug})
+            // .populate({path: 'users'})
+            .exec();
+
+        const memberCount = await OrganizationPermission.find({organization: org._id}).count();
+
+        return {
+            ...org.toJSON(),
+            memberCount
+        };
+    } catch (e) {
+        handleMongooseValidationError(e);
+    }
+};
+
+
 module.exports = {
     createOrganization,
     getById,
-    listAll
+    listAll,
+    getByUrlSlug,
 };
 

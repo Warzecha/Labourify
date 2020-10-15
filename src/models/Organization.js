@@ -7,7 +7,14 @@ const {Schema} = mongoose;
 const OrganizationSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
+    },
+    urlSlug: {
+        type: String,
+        required: true,
+        unique: true,
+        match: /^[a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]$/
     },
     icon: String
 });

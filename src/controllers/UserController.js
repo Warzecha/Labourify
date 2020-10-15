@@ -1,5 +1,6 @@
 const express = require('express');
 const UsersService = require('../services/UserService');
+const OrganizationService = require('../services/OrganizationService');
 const AchievementProgressService = require('../services/AchievementProgressService');
 const {verifyTokenMiddleware, getSubjectFromRequest} = require('../helpers/auth');
 const {handleError} = require('../helpers/error');
@@ -24,8 +25,8 @@ router.get('/me', verifyTokenMiddleware, async (req, res, next) => {
 
 router.get('/:userId', async (req, res, next) => {
     try {
-        let userId = req.params.userId;
-        let response = await UsersService.getById(userId);
+        const {userId} = req.params;
+        const response = await UsersService.getById(userId);
         res.json(response);
     } catch (e) {
         console.error(e.message);
@@ -76,6 +77,16 @@ router.get('/:userId/achievements', verifyTokenMiddleware, async (req, res, next
     }
 });
 
+router.get('/:userId/organizations', async (req, res, next) => {
+    try {
+        const {userId} = req.params;
+        const response = await OrganizationService.getDetailedOrgListForUserId(userId);
+        res.json(response);
+    } catch (e) {
+        console.error(e.message);
+        next(e);
+    }
+});
 
 router.use((err, req, res, next) => {
     handleError(err, res);
