@@ -1,4 +1,4 @@
-const {ErrorHandler} = require("./error");
+const {HandledHttpError} = require("./error");
 const jwt = require('jsonwebtoken');
 
 const {
@@ -23,11 +23,11 @@ const verifyTokenMiddleware = (req, res, next) => {
             };
             next();
         } catch (e) {
-            throw new ErrorHandler(403, 'Invalid token');
+            throw new HandledHttpError(403, 'Invalid token');
         }
 
     } else {
-        throw new ErrorHandler(403, 'Authorization header missing');
+        throw new HandledHttpError(403, 'Authorization header missing');
     }
 };
 

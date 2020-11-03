@@ -23,15 +23,16 @@ spec:
           env:
             - name: DATABASE_URL
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: app-config
                   key: database-url
             - name: JWT_EXPIRES_IN
               value: "1d"
             - name: JWT_EXPIRES_IN
-              secretKeyRef:
-                name: security-secret
-                key: jwt-secret
+              valueFrom:
+                secretKeyRef:
+                  name: security-secret
+                  key: jwt-secret
 
           ports:
             - containerPort: 8080
