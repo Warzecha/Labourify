@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const {HandledHttpError} = require('../helpers/error');
 const {NotFoundError} = require('./MongooseUtils');
-const ValidationError = mongoose.Error.ValidationError;
-const CastError = mongoose.Error.CastError;
+const {ValidationError, CastError} = mongoose.Error;
 
 const handleMongooseValidationError = (err) => {
-    if (err instanceof ValidationError || err instanceof CastError) {
+    if (err instanceof ValidationError) {
+        throw new HandledHttpError(400, err.message);
+    } else if (err instanceof CastError) {
         throw new HandledHttpError(400, err.message);
     } else if (err instanceof NotFoundError) {
         throw new HandledHttpError(404, 'Not found');

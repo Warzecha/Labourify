@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const {throwErrorIfDoesNotExist} = require('../utils/MongooseUtils');
 const {jsonFormatterPlugin} = require('../utils/MongooseUtils');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const {Schema} = mongoose;
 
@@ -25,3 +26,4 @@ OrganizationSchema.post('findOne', throwErrorIfDoesNotExist);
 OrganizationSchema.post('findOneAndDelete', throwErrorIfDoesNotExist);
 
 OrganizationSchema.plugin(jsonFormatterPlugin);
+OrganizationSchema.plugin(uniqueValidator);

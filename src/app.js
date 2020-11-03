@@ -10,6 +10,7 @@ require('./models/Organization');
 require('./models/User');
 require('./models/Integration');
 require('./models/AchievementProgress');
+require('./models/GitHubInstallation');
 
 const IndexController = require('./controllers/IndexController');
 const UsersController = require('./controllers/UserController');

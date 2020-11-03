@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
+const {getUrlSlugForName} = require('../utils/UrlSlugUtils');
 const {HandledHttpError} = require('../helpers/error');
 const {handleMongooseValidationError} = require('../utils/errorUtils');
 const Organization = mongoose.model('Organization');
 const User = mongoose.model('User');
 const OrganizationPermission = mongoose.model('OrganizationPermission');
+
+const nameRegexp = /^[0-9a-zA-Z].*[0-9a-zA-Z]$/;
 
 const createOrganization = async (createOrganizationRequest, creatorId) => {
     if (!creatorId) {
@@ -13,11 +16,15 @@ const createOrganization = async (createOrganizationRequest, creatorId) => {
 
     const creatorObjectId = mongoose.Types.ObjectId(creatorId);
 
+    const {name} = createOrganizationRequest;
+
+    if (!nameRegexp.test(name)) {
+        throw new HandledHttpError(400, 'Organization name must be at least 2 characters long, and must begin and end with an alphanumerical character');
+    }
+
+    const urlSlug = getUrlSlugForName(name);
+
     try {
-        const {name} = createOrganizationRequest;
-        const urlSlug = name
-            .replace(/[^0-9a-zA-Z-]+/, '')
-            .replace(/\s+/, '-');
 
         const organization = new Organization({
             ...createOrganizationRequest,
@@ -45,7 +52,21 @@ const createOrganization = async (createOrganizationRequest, creatorId) => {
         return organization;
 
     } catch (e) {
-        return handleMongooseValidationError(e);
+        if (e instanceof mongoose.Error.ValidationError) {
+            const {errors} = e;
+            const {urlSlug, name} = errors;
+            if (urlSlug && urlSlug.kind === 'unique') {
+                throw new HandledHttpError(400, 'Organization URL for this name is not unique.');
+            }
+                // else if (name && name.kind === 'unique') {
+                //     throw new HandledHttpError(400, 'Organization URL for this name is not unique.')
+            // }
+            else {
+                return handleMongooseValidationError(e);
+            }
+        } else {
+            return handleMongooseValidationError(e);
+        }
     }
 };
 
