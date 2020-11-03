@@ -18,6 +18,7 @@ const AuthController = require('./controllers/AuthController');
 const WebhookController = require('./controllers/WebhookController');
 const AchievementController = require('./controllers/AchievementController');
 const OrganizationController = require('./controllers/OrganizationController');
+const ExperienceLevelController = require('./controllers/ExperienceLevelController');
 
 const PORT = 8080;
 
@@ -38,6 +39,7 @@ app.use('/auth', AuthController);
 app.use('/webhook', WebhookController);
 app.use('/achievements', AchievementController);
 app.use('/organizations', OrganizationController);
+app.use('/experience', ExperienceLevelController);
 
 
 const connectToDatabase = () => {

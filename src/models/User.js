@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const {jsonFormatterPlugin} = require('../utils/MongooseUtils');
 const {throwErrorIfDoesNotExist} = require('../utils/MongooseUtils');
-let OrganizationPermission = mongoose.model('OrganizationPermission');
 
 
 const {Schema} = mongoose;
@@ -23,7 +22,22 @@ const UserSchema = new Schema({
             ref: 'OrganizationPermission',
             default: []
         }
-    ]
+    ],
+    totalExperiencePointsCollected: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    currentExperiencePoints: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    experienceLevel: {
+        type: Number,
+        required: true,
+        default: 1
+    },
 });
 
 mongoose.model('User', UserSchema);

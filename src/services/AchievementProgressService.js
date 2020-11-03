@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 const AchievementProgress = mongoose.model('AchievementProgress');
 const {achievementList} = require('./achievements');
+const UserAchievementService = require('./UserAchievementService');
 
 exports.updateProgress = async (userId, achievementId, {increaseScore}) => {
-
     const achievement = achievementList.find(({id}) => id === achievementId);
-
-    const {targetScore} = achievement;
+    const {targetScore, experiencePoints} = achievement;
 
     if (!achievement) {
         throw new Error(`Achievement with ID '${achievementId}' does not exist`);
@@ -19,8 +18,10 @@ exports.updateProgress = async (userId, achievementId, {increaseScore}) => {
         const newScore = achievementProgress.score + increaseScore;
         achievementProgress.score = newScore;
 
-        if (newScore >= targetScore) {
+        if (newScore >= targetScore && !achievementProgress.obtainedAt) {
             achievementProgress.obtainedAt = new Date().toISOString();
+            achievementProgress.experiencePointsCollected = experiencePoints;
+            await UserAchievementService.incrementUserExperience(userId, experiencePoints);
         }
 
         return achievementProgress.save();
@@ -35,6 +36,8 @@ exports.updateProgress = async (userId, achievementId, {increaseScore}) => {
 
         if (increaseScore >= targetScore) {
             toCreate.obtainedAt = new Date().toISOString();
+            toCreate.experiencePointsCollected = experiencePoints;
+            await UserAchievementService.incrementUserExperience(userId, experiencePoints);
         }
 
         return AchievementProgress.create(toCreate);
