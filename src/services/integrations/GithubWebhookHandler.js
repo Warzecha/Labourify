@@ -44,10 +44,9 @@ const handlePushEvent = async (payload) => {
 
     console.debug('matchingUsers', matchingUsers);
 
-    const matchingAchievements = ['beginner-commit-10'];
+    const matchingAchievements = ['beginner-commit-10', 'intermediate-commit-100', 'advanced-commit-1000'];
 
     matchingUsers.forEach(user => {
-
         matchingAchievements.forEach(achievement => {
             AchievementProgressService.updateProgress(user.id, achievement, {increaseScore: commitCount})
                 .then(res => {
