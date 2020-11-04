@@ -15,18 +15,25 @@ exports.updateProgress = async (userId, achievementId, {increaseScore}) => {
 
     if (achievementProgress) {
 
-        const newScore = achievementProgress.score + increaseScore;
-        achievementProgress.score = newScore;
+        if (!achievementProgress.obtainedAt) {
+            console.log(`Updating progress for achievement: ${achievementId} for user: ${userId}`);
+            const newScore = achievementProgress.score + increaseScore;
+            achievementProgress.score = newScore;
 
-        if (newScore >= targetScore && !achievementProgress.obtainedAt) {
-            achievementProgress.obtainedAt = new Date().toISOString();
-            achievementProgress.experiencePointsCollected = experiencePoints;
-            await UserAchievementService.incrementUserExperience(userId, experiencePoints);
+            if (newScore >= targetScore && !achievementProgress.obtainedAt) {
+                achievementProgress.obtainedAt = new Date().toISOString();
+                achievementProgress.experiencePointsCollected = experiencePoints;
+                await UserAchievementService.incrementUserExperience(userId, experiencePoints);
+            }
+
+            return achievementProgress.save();
+
+        } else {
+            console.log(`Skipping updating achievement: ${achievementId} for user: ${userId}. Reason: Already obtained.`);
+            return achievementProgress;
         }
-
-        return achievementProgress.save();
-
     } else {
+        console.log(`Creating  progress for achievement: ${achievementId} for user: ${userId}`);
         let toCreate = {
             userId: userId,
             achievementId: achievementId,

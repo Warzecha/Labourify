@@ -34,7 +34,7 @@ const incrementUserExperience = async (userId, experiencePoints) => {
 
     user.totalExperiencePointsCollected = totalExperiencePointsCollected + experiencePoints;
     user.experienceLevel = experienceLevel;
-    user.currentExperiencePoints = currentExperiencePoints;
+    user.currentExperiencePoints = newExperiencePoints;
 
     return user.save();
 };

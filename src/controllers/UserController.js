@@ -45,7 +45,7 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-router.put('/:userId', verifyTokenMiddleware, async (req, res, next) => {
+router.patch('/:userId', verifyTokenMiddleware, async (req, res, next) => {
     try {
         let {userId} = req.params;
 
