@@ -118,13 +118,13 @@ const getAllByGithubUsername = async (username) => {
 const update = async (id, user) => {
 
 
-    const updated = await User.findByIdAndUpdate(id, user).exec();
+    const updated = await User.findByIdAndUpdate(id, user, {new: true}).exec();
 
     const {
         githubAccount,
         slackAccount,
         image
-    } = updated;
+    } = user;
 
     if (githubAccount && githubAccount.username) {
         await AchievementProgressService.updateProgress(id, 'github-integration', {increaseScore: 1});
@@ -134,9 +134,7 @@ const update = async (id, user) => {
         await AchievementProgressService.updateProgress(id, 'slack-integration', {increaseScore: 1});
     }
 
-    const prev = await User.findById(id).exec();
-
-    if (prev.image !== image) {
+    if (image) {
         await AchievementProgressService.updateProgress(id, 'photogenic', {increaseScore: 1});
     }
 

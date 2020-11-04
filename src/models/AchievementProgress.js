@@ -22,6 +22,9 @@ const schema = new Schema({
         type: String,
         required: true
     },
+    experiencePointsCollected: {
+        type: Number
+    }
 });
 
 mongoose.model('AchievementProgress', schema);
