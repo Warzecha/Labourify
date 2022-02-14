@@ -7,5 +7,14 @@ It tracks emploees actions is popular tools (GitHub, Slack) and rewards them wit
 
 This project was created for my Computer Science Batchelor thesis at AGH University of Science and Technology 👨‍🎓 
 
+## Tech Stack
+
+* Node.js + Express.js
+* MongoDB
+* React.js
+* Docker + Kubernetes
+* Google Cloud Platfor GKE
+* Circle CI
+
 ---
 You can also check out the frontend repository for this project: https://github.com/Warzecha/labourify-frontend
